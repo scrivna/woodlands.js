@@ -51,9 +51,9 @@ console.log(JSON.stringify(rf.evaluate(testingData), null, "\t"));
 // and predict a value on potentially unseen data
 
 // return percentage of trees that agree on each class
-var prediction = rf.predict({ a: 0, b: 1 }, 'probability'); 
+var prediction = rf.predictProbability({ a: 0, b: 1 }); 
 console.log(prediction);	// {"1": 1, "0": 0}
 
 // returns a single class that has the consensus vote
-var prediction = rf.predict({ a: 0, b: 1 }, 'category');	
+var prediction = rf.predictCategory({ a: 0, b: 1 });	
 console.log(prediction);	// "1"
