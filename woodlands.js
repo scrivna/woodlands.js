@@ -222,7 +222,7 @@ ID3.prototype = {
     while (root.type !== "result") {
       var attr = root.name;
       var sampleVal = sample[attr];
-      var childNode = _.detect(root.vals,function(x) { return x.name == sampleVal });
+      var childNode = _.find(root.vals,function(x) { return x.name == sampleVal });
       if (childNode){
 	      root = childNode.child;
 	  } else {
@@ -275,7 +275,7 @@ ID3.prototype = {
  */
 
 function createTree(_s, target, features) {
-  var targets = _.unique(_.pluck(_s, target));
+  var targets = _.uniq(_.map(_s, target));
   if (targets.length == 1){
     // console.log("end node! "+targets[0]);
     return {type:"result", val: targets[0], name: targets[0],alias:targets[0]+randomTag() }; 
@@ -287,7 +287,7 @@ function createTree(_s, target, features) {
   }
   var bestFeature = maxGain(_s,target,features);
   var remainingFeatures = _.without(features,bestFeature);
-  var possibleValues = _.unique(_.pluck(_s, bestFeature));
+  var possibleValues = _.uniq(_.map(_s, bestFeature));
   
   if (possibleValues.length == 0){
 	//console.log("returning the most dominate feature!!!");
@@ -309,19 +309,19 @@ function createTree(_s, target, features) {
 }
 
 function entropy(vals){
-  var uniqueVals = _.unique(vals);
+  var uniqueVals = _.uniq(vals);
   var probs = uniqueVals.map(function(x){return prob(x,vals)});
   var logVals = probs.map(function(p){return -p*log2(p) });
   return logVals.reduce(function(a,b){return a+b},0);
 }
 
 function gain(_s,target,feature){
-  var attrVals = _.unique(_.pluck(_s, feature));
-  var setEntropy = entropy(_.pluck(_s, target));
+  var attrVals = _.uniq(_.map(_s, feature));
+  var setEntropy = entropy(_.map(_s, target));
   var setSize = _.size(_s);
   var entropies = attrVals.map(function(n){
     var subset = _s.filter(function(x){return x[feature] === n});
-    return (subset.length/setSize)*entropy(_.pluck(subset,target));
+    return (subset.length/setSize)*entropy(_.map(subset,target));
   });
   var sumOfEntropies =  entropies.reduce(function(a,b){return a+b},0);
   return setEntropy - sumOfEntropies;
