@@ -1,0 +1,15 @@
+{
+  "name": "woodlands.js",
+  "version": "1.0.0",
+  "description": "Random forest of decision trees with bootstrapping & feature bagging",
+  "main": "woodlands.js",
+  "dependencies": {
+    "lodash": "^4.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ross Scrivener",
+  "license": "MIT"
+}
