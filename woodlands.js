@@ -46,8 +46,8 @@ function RandomForest(_s, target, features, opts){
 	}
 }
 
-RandomForest.prototype.predictCategory = function(sample){
-	return this.predict(sample, 'category');
+RandomForest.prototype.predictClass = function(sample){
+	return this.predict(sample, 'class');
 };
 RandomForest.prototype.predictProbability = function(sample){
 	return this.predict(sample, 'probability');
@@ -55,7 +55,7 @@ RandomForest.prototype.predictProbability = function(sample){
 
 RandomForest.prototype.predict = function(sample, type){
 	
-	type = type || 'category'; // category or probability
+	type = type || 'class'; // class or probability
 	
 	var results = [];
 	_.each(this.trees, function(dt){
@@ -64,7 +64,7 @@ RandomForest.prototype.predict = function(sample, type){
 	
 	//console.log(results);
 	
-	if (type == 'category') return mostCommon(results);
+	if (type == 'class') return mostCommon(results);
 	if (type == 'probability'){
 		var counts = {};
 		for(var i = 0; i< results.length; i++){
@@ -99,7 +99,7 @@ RandomForest.prototype.evaluate = function(samples){
     _.each(this.data, function(s) {
 	    recall_size++;
 	    
-		var pred = instance.predictCategory(s);
+		var pred = instance.predictClass(s);
 		var actual = s[instance.target];
 		
 		var is_correct = false;
@@ -122,7 +122,7 @@ RandomForest.prototype.evaluate = function(samples){
     _.each(samples, function(s) {
 	    predict_size++;
 	    
-		var pred = instance.predictCategory(s);
+		var pred = instance.predictClass(s);
 		var actual = s[instance.target];
 		
 		var is_correct = false;

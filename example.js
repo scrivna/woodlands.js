@@ -55,5 +55,5 @@ var prediction = rf.predictProbability({ a: 0, b: 1 });
 console.log(prediction);	// {"1": 1, "0": 0}
 
 // returns a single class that has the consensus vote
-var prediction = rf.predictCategory({ a: 0, b: 1 });	
+var prediction = rf.predictClass({ a: 0, b: 1 });	
 console.log(prediction);	// "1"
