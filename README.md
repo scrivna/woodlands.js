@@ -1,6 +1,5 @@
 # woodlands.js
-Library for creating a Random forest of decision tree classifiers with bootstrapping & feature bagging
-
+A Javascript library for creating a Random Forest of Decision Tree Classifiers (with bootstrapping & feature bagging)
 
 ``` javascript
 
