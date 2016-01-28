@@ -25,6 +25,7 @@ function RandomForest(_s, target, features, opts){
 	this.numTrees = opts.numTrees || 100;
 	this.percentData = opts.percentData || .2;
 	this.percentFeatures = opts.percentFeatures || .7;
+	this.verbose = opts.verbose || false;
 	
 	this.data = _s;
 	this.target = target;
@@ -36,12 +37,17 @@ function RandomForest(_s, target, features, opts){
 		// select n% of data
 		var d = _s.slice(0);
 		d = _.slice(_.shuffle(d), 0, (d.length * this.percentData));
-		//console.log('Tree '+i+' : '+d.length);
-		
 		var n_features = Math.round(features.length * this.percentFeatures);
 		
 		var f = features.slice(0);
 		f = _.slice(_.shuffle(f), 0, n_features);
+		
+		if (this.verbose){
+			console.log('Tree '+i+' : '+d.length+' data / '+f.length+' features');
+			console.log(JSON.stringify(f.sort()));
+		}
+		
+		
 		this.trees.push(new ID3(d, target, f));
 	}
 }
@@ -88,76 +94,58 @@ RandomForest.prototype.evaluate = function(samples){
     
     var report = {
 	    size: 0,
+	    correct:0,
+	    incorrect:0,
 	    accuracy: 0,
 	    precision: 0,
 	    recall: 0,
 	    fscore: 0,
-	    class: {},
+	    class:{},
 	    featureImportance: null
     };
     
-    _.each(this.data, function(s) {
-	    recall_size++;
-	    
-		var pred = instance.predictClass(s);
-		var actual = s[instance.target];
-		
-		var is_correct = false;
-		if(pred == actual) {
-			recall_correct++;
-			is_correct = true;
-		}
-		
-		report.size++;
-		report.class[s[instance.target]] = report.class[s[instance.target]] || { precision:0, recall:0, fscore:0, recall_size:0, recall_correct: 0, predict_size:0, predict_correct: 0 };
-		
-		report.class[s[instance.target]].recall_size++;
-		if (is_correct){
-			report.class[s[instance.target]].recall_correct++;
-		}
-		
-    });
-    
-    
     _.each(samples, function(s) {
-	    predict_size++;
+	    
+	    report.size++;
 	    
 		var pred = instance.predictClass(s);
 		var actual = s[instance.target];
 		
-		var is_correct = false;
+		report.class[pred] = report.class[pred] || {size:0, predicted:0, predicted_correct:0};
+		report.class[pred].predicted++;
+		
+		report.class[actual] = report.class[actual] || {size:0, predicted:0, predicted_correct:0};
+		report.class[actual].size++;
+		
+		
 		if(pred == actual) {
-			predict_correct++;
-			is_correct = true;
-		}
-		
-		report.size++;
-		report.class[s[instance.target]] = report.class[s[instance.target]] || { precision:0, recall:0, fscore:0, recall_size:0, recall_correct: 0, predict_size:0, predict_correct: 0 };
-		
-		report.class[s[instance.target]].predict_size++;
-		if (is_correct){
-			report.class[s[instance.target]].predict_correct++;
+			report.correct++;
+			report.class[pred].predicted_correct++;
+		} else {
+			report.incorrect++;
 		}
 		
     });
     
-    _.each(report.class, function(d){
-	    d.recall = d.recall_correct / d.recall_size;
-	    d.precision = d.predict_correct / d.predict_size;
+    var class_length = 0;
+    _.each(report.class, function(d) {
+	    d.precision = d.predicted_correct / d.predicted;
+	    d.recall = d.predicted_correct / d.size;
 	    d.fscore = 2 * (d.precision * d.recall) / (d.precision + d.recall);
 	    
-	    delete d.recall_correct;
-	    delete d.recall_size;
-	    delete d.predict_correct;
-	    delete d.predict_size;
-    });
+	    report.precision+=d.precision;
+	    report.recall+=d.recall;
+	    report.fscore+=d.fscore;
+	    
+	    class_length++;
+	});
     
-    report.accuracy = (recall_correct + predict_correct) / (recall_size + predict_size);
-    report.recall = recall_correct / recall_size;
-    report.precision = predict_correct / predict_size;
-    report.fscore = 2 * (report.precision * report.recall) / (report.precision + report.recall);
+    report.accuracy = report.correct / report.size;
+    report.precision/=class_length;
+    report.recall/=class_length;
+    report.fscore/=class_length;
+    
     report.featureImportance = this.featureImportance();
-    
     return report;
 };
 RandomForest.prototype.featureImportance = function(){
