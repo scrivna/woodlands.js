@@ -194,14 +194,12 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-function ID3(_s, target, features, random_feature_selection) {
+function ID3(_s, target, features) {
   this.data = _s;
   this.target = target;
   this.features = features;
-  this.random_feature_selection = random_feature_selection || false;
   
-  this.model = createTree(_s, target, features, random_feature_selection);
-  
+  this.model = createTree(_s, target, features);
 }
 
 ID3.prototype = {
