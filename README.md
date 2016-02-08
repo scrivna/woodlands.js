@@ -1,4 +1,4 @@
-# woodlands.js
+# woodlands.js [![Build Status](https://travis-ci.org/scrivna/woodlands.js.svg?branch=master)](https://travis-ci.org/scrivna/woodlands.js)
 A Javascript library for creating a Random Forest of Decision Tree Classifiers (with bootstrapping & feature bagging)
 
 ``` javascript
