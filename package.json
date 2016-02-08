@@ -8,7 +8,7 @@
   },
   "devDependencies": {
 	"mocha": "latest",
-	"istanbul": "latest",
+	"istanbul": "latest"
   },
   "scripts": {
     "test": "mocha"
