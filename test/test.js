@@ -52,6 +52,12 @@ describe ('DecisionTree', function(){
     it('should predict 2nd testing example correctly', function () {
 		assert.equal(testingData[1].output, dt.predict(testingData[1]));
     });
+    it('should provide object of feature importance', function(){
+	   assert(typeof dt.featureImportance() == 'object');
+    });
+    it('should provide JSON model', function(){
+	   assert(typeof dt.toJSON() == 'object');
+    });
 })
 
 describe ('RandomForest', function(){

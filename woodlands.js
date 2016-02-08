@@ -70,8 +70,9 @@ RandomForest.prototype.predict = function(sample, type){
 	
 	//console.log(results);
 	
-	if (type == 'class') return mostCommon(results);
-	if (type == 'probability'){
+	if (type == 'class'){
+		return mostCommon(results);
+	} else if (type == 'probability'){
 		var counts = {};
 		for(var i = 0; i< results.length; i++){
 		    var num = results[i];
@@ -82,8 +83,6 @@ RandomForest.prototype.predict = function(sample, type){
 		});
 		return counts;
 	}
-	
-	return results.reduce(function(a, b){return a+b;}) / results.length;
 };
 RandomForest.prototype.evaluate = function(samples){
     var recall_size = 0;
@@ -213,9 +212,9 @@ ID3.prototype = {
 	      root = childNode.child;
 	  } else {
 		  try {
-		      root = root.vals[0].child;
+		    root = root.vals[0].child;
 		  } catch(e){
-			  console.log(root);
+		  	//console.log(root);
 		  }
       }
     }

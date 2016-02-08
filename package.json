@@ -7,7 +7,8 @@
     "lodash": "^4.0.0"
   },
   "devDependencies": {
-	"mocha": "latest"
+	"mocha": "latest",
+	"istanbul": "latest",
   },
   "scripts": {
     "test": "mocha"
